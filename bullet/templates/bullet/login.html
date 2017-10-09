@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bullet System Login</title>
+    <link rel="stylesheet" href="/css/semantic.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <script type="text/javascript" src="/css/jquery.min.js"></script>
+    <script type="text/javascript" src="/css/handlebars-v4.0.10.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="heading">
+			<h1>Bullet</h1>
+			<h3>Please login to continue</h3>
+		</div>
+		<div class="forms">
+			<form name="loginForm">
+				<div class="email">
+					<div class="ui input focus">
+						<input type="text" placeholder="Email" name="username">
+					</div>
+				</div>
+				<div class="password">
+					<div class="ui input focus">
+						<input type="password" placeholder="Password" name="password">
+					</div>
+				</div>
+			</form>
+			<div class="submitl">
+				<button class="ui violet basic button">Submit</button>
+			</div>
+		</div>
+	</div>
+<script>
+	var getSegment = function (url, index) {
+   		return url.replace(/^https?:\/\//, '').split('?next=')[index];
+	};
+	$(document).ready(function(){
+		$('.submitl button').click(function(){
+			var username = $('.email input').val();
+			var password = $('.password input').val();
+			var data_cont = { username: username, password: password };
+				$.ajax({
+						type:'POST',
+						async: true,
+						dataType:'json',
+						url: '/loginauth',
+						data: data_cont,
+						success: function(res){
+							if (res.status == 'OK'){
+								var currentPath = getSegment(window.location.href, 1);
+								console.log(currentPath);
+								if (currentPath !== undefined){
+									window.location.replace(currentPath);
+								}
+								else {
+									window.location.reload();
+								}
+							}
+							else {
+								console.log('login failed');
+							}
+						},
+				});
+		});
+	});
+</script>
+</body>
+</html>
